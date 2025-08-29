@@ -15,10 +15,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Use pip to install conda and other packages
 RUN pip install \
+    --no-cache-dir \
     conda \
     vllm \
     numpy==1.26 \
-    awscli
+    awscli \
+    --no-build-isolation
 
 # Set the PATH to include the default location for pip-installed binaries
 ENV PATH /root/.local/bin:$PATH
