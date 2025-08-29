@@ -18,8 +18,7 @@ RUN pip install \
     conda \
     vllm \
     numpy==1.26 \
-    awscli \
-    --no-build-isolation # flash-attn has been removed
+    awscli
 
 # Set the PATH to include the default location for pip-installed binaries
 ENV PATH /root/.local/bin:$PATH

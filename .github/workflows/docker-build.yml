@@ -23,14 +23,6 @@ jobs:
       - name: Check-out the repository code
         uses: actions/checkout@v3
 
-      # === DEBUGGING STEP START ===
-      # This step checks if the secrets are accessible in this workflow run.
-      - name: Debug Secrets Availability
-        run: |
-          echo "Username is: ${{ secrets.DOCKERHUB_USERNAME }}"
-          echo "Token is available: ${{ secrets.DOCKERHUB_TOKEN != '' }}"
-      # === DEBUGGING STEP END ===
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
