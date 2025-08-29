@@ -3,25 +3,27 @@ name: Build and Push Docker Images
 on:
   push:
     branches: [ "main" ]
-    # Run this workflow if files in any of the listed service directories change
+    # Run this workflow if files in EITHER of the directories change
     paths:
       - 'abrsm-base/**'
-      # When you add a new service, add its path here. e.g., 'new-service/**'
+      - 'abrsm-base-light/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     
     strategy:
-      # Define a matrix of services to build
+      # This matrix tells GitHub Actions to run a separate job for each service listed below.
+      # These jobs will run IN PARALLEL.
       matrix:
         service:
-          # Currently, we only have one service: abrsm-base
+          # Job 1: The original, long-running build
           - name: abrsm-base
             image_name: abrsm-base
-          # When you add a new service, add its details here. e.g.,
-          # - name: new-service
-          #   image_name: my-cool-new-service
+
+          # Job 2: The new, faster build without flash-attn
+          - name: abrsm-base-light
+            image_name: abrsm-base-light
 
     steps:
       - name: Check-out the repository code
@@ -30,14 +32,14 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKOERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push the Docker image
         uses: docker/build-push-action@v4
         with:
-          # The context path is dynamically set from the matrix 'name'
+          # The context path is dynamically set from the matrix 'name' (e.g., ./abrsm-base)
           context: ./${{ matrix.service.name }}
           push: true
-          # The image tag is dynamically set from the matrix 'image_name'
+          # The image tag is dynamically set from the matrix 'image_name' (e.g., your-id/abrsm-base:latest)
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service.image_name }}:latest
