@@ -11,27 +11,33 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sox \
     && rm -rf /var/lib/apt/lists/*
 
-# === MODIFIED SECTION START ===
-# Install Miniforge instead of Miniconda for better stability and compatibility
-RUN wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O ~/miniforge.sh && \
-    /bin/bash ~/miniforge.sh -b -p /opt/conda && \
-    rm ~/miniforge.sh
-# === MODIFIED SECTION END ===
+# === NEW METHOD START ===
+# Use pip to install conda and other packages directly, avoiding shell script issues.
+# This is a more robust method when base image environments are problematic.
 
-# Set the PATH environment variable for conda
-ENV PATH /opt/conda/bin:$PATH
-
-# Install specified Python packages using pip
-# vllm will automatically detect the PyTorch/CUDA version and install the correct backend.
+# Step 1: Install conda and other required packages in one go.
+# We also install a specific numpy version and other tools here.
 RUN pip install \
+    conda \
     vllm \
     numpy==1.26 \
     awscli \
     flash-attn \
     --no-build-isolation
 
+# Step 2: Set the PATH to include the default location for pip-installed binaries.
+# The user's local bin directory is typically where conda will be installed.
+ENV PATH /root/.local/bin:$PATH
+
+# Step 3: Initialize conda. This creates the necessary config files.
+RUN conda init bash
+# === NEW METHOD END ===
+
+
 # Set the working directory inside the container
 WORKDIR /workspace
 
-# Start a bash shell when the container launches
-CMD ["/bin/bash"]
+# Start a bash shell when the container launches.
+# The 'conda init' command modifies the .bashrc, so we start an interactive shell
+# to ensure the conda environment is activated.
+CMD ["/bin/bash", "-l"]
