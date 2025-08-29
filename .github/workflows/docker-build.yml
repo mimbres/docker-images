@@ -1,10 +1,8 @@
-
 name: Build and Push Docker Images
 
 on:
   push:
     branches: [ "main" ]
-    # Run this workflow if files in EITHER of the directories change
     paths:
       - 'abrsm-base/**'
       - 'abrsm-base-light/**'
@@ -12,17 +10,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     strategy:
-      # This matrix tells GitHub Actions to run a separate job for each service listed below.
-      # These jobs will run IN PARALLEL.
       matrix:
         service:
-          # Job 1: The original, long-running build
           - name: abrsm-base
             image_name: abrsm-base
-
-          # Job 2: The new, faster build without flash-attn
           - name: abrsm-base-light
             image_name: abrsm-base-light
 
@@ -30,18 +22,23 @@ jobs:
       - name: Check-out the repository code
         uses: actions/checkout@v3
 
+      # === DEBUGGING STEP START ===
+      # This step checks if the secrets are accessible in this workflow run.
+      - name: Debug Secrets Availability
+        run: |
+          echo "Username is: ${{ secrets.DOCKERHUB_USERNAME }}"
+          echo "Token is available: ${{ secrets.DOCKERHUB_TOKEN != '' }}"
+      # === DEBUGGING STEP END ===
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          # CORRECTED a typo here. It should be DOCKERHUB_USERNAME
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push the Docker image
         uses: docker/build-push-action@v4
         with:
-          # The context path is dynamically set from the matrix 'name' (e.g., ./abrsm-base)
           context: ./${{ matrix.service.name }}
           push: true
-          # The image tag is dynamically set from the matrix 'image_name' (e.g., your-id/abrsm-base:latest)
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service.image_name }}:latest
