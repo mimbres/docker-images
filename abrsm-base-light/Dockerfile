@@ -17,7 +17,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install \
     --no-cache-dir \
     conda \
-    vllm \
     numpy==1.26 \
     awscli \
     --no-build-isolation
