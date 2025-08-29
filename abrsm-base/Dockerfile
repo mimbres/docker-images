@@ -11,16 +11,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sox \
     openssh-client \
     lftp \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Use pip to install conda and other packages
+# Use pip to install conda and other packages without using cache
 RUN pip install \
     --no-cache-dir \
     conda \
     vllm \
     numpy==1.26 \
     awscli \
-    flash-attn \
+    "flash-attn==2.5.8" \
     --no-build-isolation
 
 # Set the PATH to include the default location for pip-installed binaries
