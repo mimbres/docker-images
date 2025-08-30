@@ -3,9 +3,15 @@ FROM pytorch/pytorch:2.3.0-cuda12.1-cudnn8-devel
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    s3fs \
+    s3cmd \
     wget \
+    curl \
     git \
     nano \
+    tmux \
+    nmon \
+    p7zip \
     htop \
     ffmpeg \
     sox \
@@ -20,6 +26,10 @@ RUN pip install \
     conda \
     numpy==1.26 \
     awscli \
+    fsspec \
+    aiobotocore \
+    s3fs \
+    boto3 \
     "flash-attn==2.5.8" \
     --no-build-isolation
 
