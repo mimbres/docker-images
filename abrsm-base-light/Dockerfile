@@ -1,10 +1,25 @@
-# Start from the official PyTorch image with CUDA 12.1 for NVIDIA GPUs
-FROM pytorch/pytorch:2.3.0-cuda12.1-cudnn8-devel
+# Start from the official PyTorch image with CUDA 12.6 for NVIDIA GPUs w/o flash-attn
+FROM pytorch/pytorch:2.6.0-cuda12.6-cudnn9-devel
+
+# Set the timezone to Europe/London to avoid interactive prompts during package installation
+ENV TZ=Europe/London
+# Set debian frontend to noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    # Install tzdata first to configure timezone
+    tzdata \
+    # File IO dependencies
     s3fs \
     s3cmd \
+    # Media Codec
+    ffmpeg \
+    sox \
+    # Network
+    openssh-client \
+    lftp \
+    # Others
     wget \
     curl \
     git \
@@ -13,10 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nmon \
     p7zip \
     htop \
-    ffmpeg \
-    sox \
-    openssh-client \
-    lftp \
+    # Clean up apt cache
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
