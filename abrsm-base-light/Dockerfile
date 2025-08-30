@@ -3,22 +3,33 @@ FROM pytorch/pytorch:2.3.0-cuda12.1-cudnn8-devel
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    s3fs \
+    s3cmd \
     wget \
+    curl \
     git \
     nano \
+    tmux \
+    nmon \
+    p7zip \
     htop \
     ffmpeg \
     sox \
     openssh-client \
     lftp \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Use pip to install conda and other packages
+# Use pip to install conda and other packages without using cache
 RUN pip install \
     --no-cache-dir \
     conda \
     numpy==1.26 \
     awscli \
+    fsspec \
+    aiobotocore \
+    s3fs \
+    boto3 \
     --no-build-isolation
 
 # Set the PATH to include the default location for pip-installed binaries
