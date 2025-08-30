@@ -1,4 +1,4 @@
-# Start from the official PyTorch image with CUDA 12.1 for NVIDIA GPUs
+# Start from the official PyTorch image with CUDA 12.6 for NVIDIA GPUs with flash-attn
 FROM pytorch/pytorch:2.6.0-cuda12.6-cudnn9-devel
 
 # Set the timezone to Europe/London to avoid interactive prompts during package installation
