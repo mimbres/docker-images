@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tmux \
     nmon \
     p7zip-full \
+    rename \
     htop \
     # Clean up apt cache
     && apt-get clean \
