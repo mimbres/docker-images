@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nano \
     tmux \
     nmon \
-    p7zip \
+    p7zip-full \
     htop \
     # Clean up apt cache
     && apt-get clean \
