@@ -7,6 +7,7 @@ on:
       - '.github/workflows/**'
       - 'abrsm-base/**'
       - 'abrsm-base-light/**'
+      - 'abrsm-notebook/**'
 
 jobs:
   build:
@@ -18,6 +19,8 @@ jobs:
             image_name: abrsm-base
           - name: abrsm-base-light
             image_name: abrsm-base-light
+          - name: abrsm-notebook
+            image_name: abrsm-notebook
 
     steps:
       - name: Check-out the repository code
