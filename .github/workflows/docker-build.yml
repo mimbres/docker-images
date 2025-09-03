@@ -8,6 +8,7 @@ on:
       - 'abrsm-base/**'
       - 'abrsm-base-light/**'
       - 'abrsm-notebook/**'
+      - 'abrsm-codeserver/**'
 
 jobs:
   build:
@@ -21,6 +22,8 @@ jobs:
             image_name: abrsm-base-light
           - name: abrsm-notebook
             image_name: abrsm-notebook
+          - name: abrsm-codeserver
+            image_name: abrsm-codeserver
 
     steps:
       - name: Check-out the repository code
