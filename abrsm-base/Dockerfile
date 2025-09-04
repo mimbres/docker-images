@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     p7zip-full \
     rename \
     htop \
+    portaudio19-dev \
     # Clean up apt cache
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
